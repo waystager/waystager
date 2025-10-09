@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matt - Product Manager</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f0f4f8;
+            background-image: 
+                linear-gradient(rgba(147, 197, 253, 0.15) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(147, 197, 253, 0.15) 1px, transparent 1px);
+            background-size: 20px 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .workspace {
+            background: white;
+            border-radius: 16px;
+            padding: 48px 40px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 
+                0 1px 3px rgba(0, 0, 0, 0.05),
+                0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 48px;
+            margin: 0 0 8px 0;
+            color: #111827;
+            font-weight: 700;
+        }
+
+        .subtitle {
+            font-size: 16px;
+            color: #6b7280;
+            margin: 0 0 32px 0;
+        }
+
+        .tagline {
+            font-size: 22px;
+            color: #374151;
+            font-weight: 500;
+            margin: 0 0 48px 0;
+            min-height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: white;
+            padding: 32px 24px;
+            border-radius: 16px;
+            box-shadow: 
+                0 1px 3px rgba(0, 0, 0, 0.05),
+                0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .rotating-text {
+            display: inline-block;
+            color: #2563eb;
+            font-weight: 600;
+            min-width: 220px;
+            position: relative;
+            padding: 10px 18px;
+            background: #f8fafc;
+            border-radius: 6px;
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.06);
+            border: 1px solid #e2e8f0;
+        }
+
+        .rotating-text::before,
+        .rotating-text::after {
+            display: none;
+        }
+
+        .text-glow {
+            position: relative;
+            z-index: 1;
+        }
+
+        .flip-enter {
+            animation: flipIn 0.6s ease-out forwards;
+        }
+
+        @keyframes flipIn {
+            0% {
+                transform: rotateX(-90deg);
+                opacity: 0;
+            }
+            100% {
+                transform: rotateX(0);
+                opacity: 1;
+            }
+        }
+
+        .flip-exit {
+            animation: flipOut 0.6s ease-in forwards;
+        }
+
+        @keyframes flipOut {
+            0% {
+                transform: rotateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: rotateX(90deg);
+                opacity: 0;
+            }
+        }
+
+        .contact-links {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-link {
+            text-decoration: none;
+            color: #2563eb;
+            font-weight: 500;
+            padding: 12px 24px;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            flex: 0 1 auto;
+        }
+
+        .contact-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+        }
+
+        .contact-link.primary {
+            background: white;
+            color: #2563eb;
+        }
+
+        .contact-link.primary:hover {
+            background: white;
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer-note {
+            margin-top: 32px;
+            color: #9ca3af;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .signup-link {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .signup-link:hover {
+            color: #1d4ed8;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 32px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            line-height: 1;
+            padding: 4px 8px;
+        }
+
+        .modal-close:hover {
+            color: #374151;
+        }
+
+        .modal h2 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            color: #111827;
+        }
+
+        .modal p {
+            margin: 0 0 24px 0;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .newsletter-form label {
+            font-weight: 500;
+            color: #374151;
+            font-size: 14px;
+            margin-bottom: -8px;
+        }
+
+        .newsletter-form input[type="email"] {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        .newsletter-form input[type="email"]:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+
+        .newsletter-form input[type="submit"] {
+            padding: 12px 24px;
+            background: #2563eb;
+            color: white;
+            border: 2px solid #2563eb;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+        }
+
+        .newsletter-form input[type="submit"]:hover {
+            background: #1d4ed8;
+            border-color: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
+        }
+
+        .powered-by {
+            text-align: center;
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .powered-by a {
+            color: #2563eb;
+            text-decoration: none;
+        }
+
+        .powered-by a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 10px;
+            }
+
+            .workspace {
+                padding: 24px 20px;
+            }
+
+            h1 {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 18px;
+                padding: 24px 16px;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .rotating-text {
+                min-width: 180px;
+                font-size: 16px;
+            }
+
+            .contact-links {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+
+            .contact-link {
+                width: auto;
+                justify-content: center;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="workspace">
+        <div class="container">
+            <h1>Matt Townsend</h1>
+            <p class="subtitle">Product leader turning complexity into clarity • Brooklyn, NY</p>
+            <p class="tagline">
+                Building tools that <span class="rotating-text"><span class="text-glow" id="rotating-text">untangle processes</span></span>
+            </p>
+
+            <div class="contact">
+                <div class="contact-links">
+                    <a href="javascript:void(0)" onclick="window.location.href='mailto:hello' + '@' + 'waystager.com'" class="contact-link primary">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Email
+                    </a>
+                    <a href="https://www.linkedin.com/in/matt-townsend-0033017a" target="_blank" rel="noopener noreferrer" class="contact-link">
+                        <svg class="icon" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                        LinkedIn
+                    </a>
+                    <a href="https://calendly.com/matt-waystager/30min" target="_blank" rel="noopener noreferrer" class="contact-link">
+                        <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Book a Chat
+                    </a>
+                </div>
+                <p class="footer-note">
+                    Newsletter coming soon! 
+                    <a href="javascript:void(0)" class="signup-link" id="signup-link">Subscribe for updates</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="newsletter-modal">
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">&times;</button>
+            <h2>Subscribe to my newsletter</h2>
+            <p>Get updates on product management, workflows, and building better tools.</p>
+            <form
+                action="https://buttondown.com/api/emails/embed-subscribe/waystager"
+                method="post"
+                target="_blank"
+                class="newsletter-form embeddable-buttondown-form"
+            >
+                <label for="email">Email</label>
+                <input type="email" name="email" id="email" placeholder="you@example.com" required />
+                <input type="hidden" value="1" name="embed" />
+                <input type="submit" value="Subscribe" />
+            </form>
+            <p class="powered-by">
+                <a href="https://buttondown.com" target="_blank" rel="noopener noreferrer">
+                    Powered by Buttondown
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        const phrases = [
+            'untangle processes',
+            'work how you think',
+            'solve real problems',
+            'make work easier'
+        ];
+        
+        let currentIndex = 0;
+        const textElement = document.getElementById('rotating-text');
+        
+        function rotateText() {
+            textElement.classList.remove('flip-enter');
+            textElement.classList.add('flip-exit');
+            
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % phrases.length;
+                textElement.textContent = phrases[currentIndex];
+                textElement.classList.remove('flip-exit');
+                textElement.classList.add('flip-enter');
+            }, 300);
+        }
+        
+        setTimeout(() => {
+            rotateText();
+            setInterval(rotateText, 4000);
+        }, 2000);
+
+        // Modal functionality
+        const modal = document.getElementById('newsletter-modal');
+        const signupLink = document.getElementById('signup-link');
+        const closeBtn = document.getElementById('modal-close');
+
+        signupLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            modal.classList.add('active');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
